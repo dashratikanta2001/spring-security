@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class HelloWorldController {
 
-	@GetMapping("/helloWorld")
+	@ResponseBody
+	@GetMapping("/helloWorld") //dont secure
 	public String helloWorld()
 	{
 		return "hello-world";
@@ -15,9 +16,16 @@ public class HelloWorldController {
 	
 	
 	@ResponseBody
-	@GetMapping("/hello")
+	@GetMapping("/hello")  //secure
 	public String hello()
 	{
-		return "hello-world";
+		return "hello from Ratikanta";
+	}
+	
+	@ResponseBody
+	@GetMapping("/bye")  //secure
+	public String bye()
+	{
+		return "bye bye !!!!";
 	}
 }

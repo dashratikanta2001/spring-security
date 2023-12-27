@@ -1,5 +1,7 @@
 package com.practice.config;
 
+import java.util.ArrayList;
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +9,14 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @EnableWebSecurity
 public class MySecurityConfig extends WebSecurityConfigurerAdapter{
@@ -22,9 +29,10 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
-	@Autowired
-	private DataSource dataSource;
+//	@Autowired
+//	private DataSource dataSource;
 	
+	/*
 	//This is for the database store.
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -34,7 +42,7 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter{
 		auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(passwordEncoder);
 	}
 	
-	
+	*/
 	
 	
 	/*
@@ -58,6 +66,35 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter{
 		
 	}
 	 */
+	
+	
+	
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		// TODO Auto-generated method stub
+		//Inmemory auth
+//		ArrayList<GrantedAuthority> roles = new ArrayList<>();
+//		
+//		SimpleGrantedAuthority role1 = new SimpleGrantedAuthority("ADMIN");
+//		SimpleGrantedAuthority role2 = new SimpleGrantedAuthority("USER");
+//		
+//		roles.add(role1);
+//		roles.add(role2);
+//		User rati = new User("rati@gmail.com", "rati123", roles);
+		
+		
+		InMemoryUserDetailsManager userDetailsManager = new InMemoryUserDetailsManager();
+		
+		
+		UserDetails ratiUser = User.withUsername("rati").password("rati123").roles("ADMIN","USER").build();
+		UserDetails kartikUser = User.withUsername("kartik").password("kartik123").roles("USER").build();
+		
+		userDetailsManager.createUser(ratiUser);
+		userDetailsManager.createUser(kartikUser);
+		
+		auth.userDetailsService(userDetailsManager);
+		
+	}
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {

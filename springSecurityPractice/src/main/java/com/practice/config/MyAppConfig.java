@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -64,8 +64,8 @@ public class MyAppConfig implements WebMvcConfigurer{
 	@Bean
 	PasswordEncoder getPasswordEncoder() {
 		// TODO Auto-generated method stub
-//		return NoOpPasswordEncoder.getInstance();
-		return new BCryptPasswordEncoder();
+		return NoOpPasswordEncoder.getInstance();
+//		return new BCryptPasswordEncoder();
 	}
 	
 }

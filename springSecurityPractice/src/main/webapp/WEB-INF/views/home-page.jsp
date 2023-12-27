@@ -18,8 +18,8 @@
 	<sec:authorize access='hasAuthority("Trainer")'>
 
 		<a href="trainer">Show Trainer's dashboard.</a>
-	</sec:authorize>
 	<br>
+	</sec:authorize>
 	<sec:authorize access='hasAuthority("Coder")'>
 		<a href="coder">Show Coder's dashboard.</a>
 	</sec:authorize>

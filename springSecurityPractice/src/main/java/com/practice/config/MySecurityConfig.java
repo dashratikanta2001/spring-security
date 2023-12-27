@@ -65,16 +65,17 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter{
 		
 		http
 		.authorizeRequests()
-		.antMatchers("/hello").authenticated()
-		.antMatchers("/bye").authenticated()
-		.antMatchers("/helloWorld").permitAll()
-		.antMatchers("/signup").permitAll()
+		.antMatchers("/coder").hasAuthority("Coder")
+		.antMatchers("/trainer").hasAuthority("Trainer")
+		.anyRequest()
+		.authenticated()
 		.and()
 		.formLogin()
-		.loginPage("/myCustomLogin")
+		.loginPage("/myCustomLogin").permitAll()
 		.and()
 		.httpBasic()
-		.and().logout();
+		.and().logout().permitAll()
+		.and().exceptionHandling().accessDeniedPage("/accessDenied");
 	}
 	
 	

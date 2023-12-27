@@ -20,7 +20,7 @@ public class SignupDaoImpl implements SignupDao {
 		String sql2 = "insert into authorities values(?,?)";
 		
 		jdbcTemplate.update(sql, signupDto.getUsername(), signupDto.getPassword(),1);
-		jdbcTemplate.update(sql2, signupDto.getUsername(), "USER");
+		jdbcTemplate.update(sql2, signupDto.getUsername(), "Trainer");
 	}
 
 }

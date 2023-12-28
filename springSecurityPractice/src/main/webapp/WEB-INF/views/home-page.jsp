@@ -23,6 +23,15 @@
 	<sec:authorize access='hasAuthority("Coder")'>
 		<a href="coder">Show Coder's dashboard.</a>
 	</sec:authorize>
+	
+	
+	<br>
+	<br><br>
+	
+	<a href="/changePassword">Change Password</a>
+	<br>
+	<a href="/deleteUser?username=${username }">Delete Account</a>
+	<br>
 
 	<p>Spring security.....</p>
 

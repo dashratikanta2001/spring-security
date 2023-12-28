@@ -11,16 +11,30 @@ public class SignupDaoImpl implements SignupDao {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
+
 	@Override
 	public void saveUser(SignupDto signupDto) {
 		// TODO Auto-generated method stub
-		
+
 		String sql = "insert into users values(?,?,?)";
 		String sql2 = "insert into authorities values(?,?)";
+
+//		jdbcTemplate.update(sql, signupDto.getUsername(), signupDto.getPassword(),1);
+//		jdbcTemplate.update(sql2, signupDto.getUsername(), "Trainer");
+
+		jdbcTemplate.update(sql, ps -> {
+			// TODO Auto-generated method stub
+
+			ps.setString(1, signupDto.getUsername());
+			ps.setString(2, signupDto.getPassword());
+			ps.setInt(3, 1);
+
+		}); 
 		
-		jdbcTemplate.update(sql, signupDto.getUsername(), signupDto.getPassword(),1);
-		jdbcTemplate.update(sql2, signupDto.getUsername(), "Trainer");
+		jdbcTemplate.update(sql2, ps->{
+			ps.setString(1, signupDto.getUsername());
+			ps.setString(2, "Coder");
+		});
 	}
 
 }

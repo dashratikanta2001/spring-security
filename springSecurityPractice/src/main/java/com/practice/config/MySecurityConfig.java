@@ -29,20 +29,23 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
-//	@Autowired
-//	private DataSource dataSource;
+	@Autowired
+	private DataSource dataSource;
 	
-	/*
+	
 	//This is for the database store.
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		// TODO Auto-generated method stub
 		//Load the user from database.
 		//username, password, role
-		auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(passwordEncoder);
+		auth
+		.jdbcAuthentication()
+		.dataSource(dataSource)
+		.passwordEncoder(passwordEncoder);
 	}
 	
-	*/
+	
 	
 	
 	/*
@@ -67,7 +70,7 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter{
 	}
 	 */
 	
-	
+	/*
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -95,6 +98,7 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter{
 		auth.userDetailsService(userDetailsManager);
 		
 	}
+	*/
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -104,6 +108,7 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter{
 		.authorizeRequests()
 		.antMatchers("/coder").hasAuthority("Coder")
 		.antMatchers("/trainer").hasAuthority("Trainer")
+		.antMatchers("/signup","/process-signup").permitAll()
 		.anyRequest()
 		.authenticated()
 		.and()

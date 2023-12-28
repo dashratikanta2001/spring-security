@@ -36,7 +36,7 @@ public class MyAppConfig implements WebMvcConfigurer{
 	{
 		DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
 
-		driverManagerDataSource.setUrl("jdbc:mysql://localhost:3306/securitydb");
+		driverManagerDataSource.setUrl("jdbc:mysql://localhost:3306/justTesting");
 		driverManagerDataSource.setUsername("root");
 		driverManagerDataSource.setPassword("Admin@123");
 		driverManagerDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
@@ -53,11 +53,11 @@ public class MyAppConfig implements WebMvcConfigurer{
 		return jdbcTemplate;
 	}
 	
-	@Bean
-	public JdbcUserDetailsManager jdbcUserDetailsManager()
-	{
-		return new JdbcUserDetailsManager(dataSource());
-	}
+//	@Bean
+//	public JdbcUserDetailsManager jdbcUserDetailsManager()
+//	{
+//		return new JdbcUserDetailsManager(dataSource());
+//	}
 	
 	
 	
@@ -66,12 +66,34 @@ public class MyAppConfig implements WebMvcConfigurer{
 	
 	
 	
+//	
+//	@Bean
+//	PasswordEncoder getPasswordEncoder() {
+//		// TODO Auto-generated method stub
+////		return NoOpPasswordEncoder.getInstance();
+//		return new BCryptPasswordEncoder();
+//	}
 	
 	@Bean
 	PasswordEncoder getPasswordEncoder() {
 		// TODO Auto-generated method stub
 //		return NoOpPasswordEncoder.getInstance();
-		return new BCryptPasswordEncoder();
+		return NoOpPasswordEncoder.getInstance();
 	}
+	
+	@Bean
+	public JdbcUserDetailsManager jdbcUserDetailsManager()
+	{
+		JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource());
+		
+		userDetailsManager.setUsersByUsernameQuery("select username, password, enabled from customers where username=?");
+		userDetailsManager.setAuthoritiesByUsernameQuery("select username,roles from customers where username=?");
+		userDetailsManager.setChangePasswordSql("update customers set password = ? where username = ?");
+		userDetailsManager.setDeleteUserSql("delete from customers where username = ?");
+		userDetailsManager.setDeleteUserAuthoritiesSql("delete from customers where username = ?");
+		return userDetailsManager;
+	}
+	
+	
 	
 }

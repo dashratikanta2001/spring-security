@@ -18,6 +18,8 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
+import com.practice.service.CustomerUserDetailsServiceImpl;
+
 @EnableWebSecurity
 public class MySecurityConfig extends WebSecurityConfigurerAdapter{
 
@@ -32,6 +34,9 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private DataSource dataSource;
 	
+	@Autowired
+	private CustomerUserDetailsServiceImpl userDetailsServiceImpl;
+	
 	
 	//This is for the database store.
 	@Override
@@ -39,12 +44,14 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter{
 		// TODO Auto-generated method stub
 		//Load the user from database.
 		//username, password, role
-		auth
-		.jdbcAuthentication()
-		.dataSource(dataSource)
-		.usersByUsernameQuery("select username, password, enabled from customers where username=?")
-		.authoritiesByUsernameQuery("select username,roles from customers where username=?")
-		.passwordEncoder(passwordEncoder);
+//		auth
+//		.jdbcAuthentication()
+//		.dataSource(dataSource)
+//		.usersByUsernameQuery("select username, password, enabled from customers where username=?")
+//		.authoritiesByUsernameQuery("select username,roles from customers where username=?")
+//		.passwordEncoder(passwordEncoder);
+		
+		auth.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder);
 	}
 	
 	

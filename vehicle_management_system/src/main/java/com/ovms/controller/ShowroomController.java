@@ -47,9 +47,28 @@ public class ShowroomController {
 	@GetMapping("/type/{vehicleType}")
 	public ResponseEntity<?> GetByVehicleType(@PathVariable ("vehicleType") String type)
 	{
+		CustomeResponse<?> response = showroomService.findByVehicleType(type);
 		
 		
-		return null;
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping("/brand/{vehicleBrand}")
+	public ResponseEntity<?> GetByVehicleBrand(@PathVariable ("vehicleBrand") String brand)
+	{
+		CustomeResponse<?> response = showroomService.findByVehicleBrand(brand);
+		
+		
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping("/city/{city}")
+	public ResponseEntity<?> GetByVehicleCity(@PathVariable ("city") String city)
+	{
+		CustomeResponse<?> response = showroomService.findByCity(city);
+		
+		
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 

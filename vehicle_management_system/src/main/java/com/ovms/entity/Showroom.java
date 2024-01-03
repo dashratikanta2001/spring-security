@@ -5,6 +5,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -43,8 +45,9 @@ public class Showroom {
 	@OneToMany(mappedBy = "id")
 	private List<Vehicle> vehicle;
 	
-	@Column(name = "vehicle_type")
-	private VehicleType vehicleType;
+//	@Column(name = "vehicle_type")
+//	@Enumerated(EnumType.STRING)
+//	private VehicleType vehicleType;
 
 	public int getId() {
 		return id;
@@ -104,13 +107,13 @@ public class Showroom {
 	
 	
 
-	public VehicleType getVehicleType() {
-		return vehicleType;
-	}
-
-	public void setVehicleType(VehicleType vehicleType) {
-		this.vehicleType = vehicleType;
-	}
+//	public VehicleType getVehicleType() {
+//		return vehicleType;
+//	}
+//
+//	public void setVehicleType(VehicleType vehicleType) {
+//		this.vehicleType = vehicleType;
+//	}
 
 	
 
@@ -124,7 +127,7 @@ public class Showroom {
 		this.email = email;
 		this.brand = brand;
 		this.vehicle = vehicle;
-		this.vehicleType = vehicleType;
+//		this.vehicleType = vehicleType;
 	}
 
 	public Showroom() {

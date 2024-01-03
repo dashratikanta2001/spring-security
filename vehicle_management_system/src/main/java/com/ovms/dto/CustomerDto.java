@@ -1,6 +1,13 @@
 package com.ovms.dto;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.ovms.entity.Customer;
+
 public class CustomerDto {
+	
+	
 
 	private Integer id;
 
@@ -65,6 +72,25 @@ public class CustomerDto {
 		this.phoneNo = phoneNo;
 		this.address = address;
 	}
+	
+	
+	public  static CustomerDto convertToDto(Customer customer) {
+		
+		CustomerDto customerDto = new CustomerDto();
+		
+		if(customer!=null) {
+			customerDto.setId(customer.getId());
+			customerDto.setName(customer.getName());
+			customerDto.setEmail(customer.getEmail());
+			customerDto.setAddress(customer.getAddress());
+			customerDto.setPhoneNo(customer.getPhoneNo());
+			
+			return customerDto;
+		}
+		return null;
+		
+	}
+	
 	
 	
 	

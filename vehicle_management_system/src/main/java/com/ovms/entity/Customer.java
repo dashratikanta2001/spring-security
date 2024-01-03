@@ -14,14 +14,17 @@ public class Customer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-
+	
+	@Column(name = "name")
 	private String name;
-
+	
+	@Column(name = "email")
 	private String email;
-
+	
 	@Column(name = "phone_number")
 	private String phoneNo;
-
+	
+	@Column(name = "address")
 	private String address;
 
 	public Integer getId() {
@@ -66,10 +69,10 @@ public class Customer {
 
 	public Customer() {
 		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
-	public Customer( String name, String email, String phoneNo, String address) {
+	public Customer(String name, String email, String phoneNo, String address) {
 		super();
 		this.name = name;
 		this.email = email;

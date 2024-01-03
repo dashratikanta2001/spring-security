@@ -16,12 +16,15 @@ public class ShowroomDto {
 	private String phoneNo;
 
 	private String email;
+	
+	private String vehicleBrand;
 
-	private BrandDto brand;
+	private String vehicleType;
+
+//	private BrandDto brand;
 
 	private List<VehicleDto> vehicle;
 	
-	private String vehicleType;
 
 	public int getId() {
 		return id;
@@ -63,13 +66,13 @@ public class ShowroomDto {
 		this.email = email;
 	}
 
-	public BrandDto getBrand() {
-		return brand;
-	}
-
-	public void setBrand(BrandDto brand) {
-		this.brand = brand;
-	}
+//	public BrandDto getBrand() {
+//		return brand;
+//	}
+//
+//	public void setBrand(BrandDto brand) {
+//		this.brand = brand;
+//	}
 
 	public List<VehicleDto> getVehicle() {
 		return vehicle;
@@ -77,6 +80,15 @@ public class ShowroomDto {
 
 	public void setVehicle(List<VehicleDto> vehicle) {
 		this.vehicle = vehicle;
+	}
+	
+
+	public String getVehicleBrand() {
+		return vehicleBrand;
+	}
+
+	public void setVehicleBrand(String vehicleBrand) {
+		this.vehicleBrand = vehicleBrand;
 	}
 
 	public String getVehicleType() {

@@ -24,8 +24,14 @@ public class BrandServiceImpl implements BrandService {
 	@Override
 	public CustomeResponse<?> save(BrandDto brandDto) {
 		// TODO Auto-generated method stub
-
-		Brands brand = brandsDao.find(dtoToBrand(brandDto));
+		VehicleType valueOfVehicleType;
+		try {
+			valueOfVehicleType = VehicleType.valueOf(VehicleType.class, brandDto.getVehicleType().toUpperCase());
+		} catch (Exception e) {
+			throw new InvalidVehicleTypeException("Invalid vehicle type");
+		}
+		
+		Brands brand = brandsDao.find(brandDto.getName(), valueOfVehicleType);
 		if (brand == null) {
 			Brands brands = brandsDao.save(dtoToBrand(brandDto));
 			return new CustomeResponse<>(brands, HttpStatus.OK.value(), "Brand added successfully");
@@ -45,19 +51,26 @@ public class BrandServiceImpl implements BrandService {
 
 		return new CustomeResponse<>(allBrandDto, HttpStatus.OK.value(), "Brand found");
 	}
+	
 
 	public Brands dtoToBrand(BrandDto brandDto) {
 
 		Brands brands = new Brands();
+		
+		if(brandDto!=null) {
+			brands.setId(brandDto.getId());
+			brands.setName(brandDto.getName());
+			
+			
+			try {
+				VehicleType valueOfVehicleType = VehicleType.valueOf(VehicleType.class, brandDto.getVehicleType().toUpperCase());
+				brands.setVehicleType(valueOfVehicleType);
+			} catch (Exception e) {
+				throw new InvalidVehicleTypeException("Invalid vehicle type");
+			}		}
 
-		brands.setName(brandDto.getName());
-
-		try {
-			brands.setVehicleType(VehicleType.valueOf(VehicleType.class, brandDto.getVehicleType().toUpperCase()));
-			return brands;
-		} catch (Exception e) {
-			throw new InvalidVehicleTypeException("Invalid vehicle type");
-		}
+		 return brands;
+		
 	}
 
 	public BrandDto BrandToDto(Brands brand) {

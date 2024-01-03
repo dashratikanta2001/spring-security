@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.ovms.dto.VehicleDto;
+
 @Entity
 @Table(name = "vehicle")
 public class Vehicle {
@@ -126,5 +128,22 @@ public class Vehicle {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	
+	
+	public Vehicle(Integer id, String vehicleNumber, String engineNumber, String chesisNumber, Date regDate,
+			Date assignDate, Brands brand, Showroom showroom, Customer customer) {
+		super();
+		this.id = id;
+		this.vehicleNumber = vehicleNumber;
+		this.engineNumber = engineNumber;
+		this.chesisNumber = chesisNumber;
+		this.regDate = regDate;
+		this.assignDate = assignDate;
+		this.brand = brand;
+		this.showroom = showroom;
+		this.customer = customer;
+	}
 
-}
+
+}	

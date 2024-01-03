@@ -2,6 +2,8 @@ package com.ovms.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,6 +23,7 @@ public class Brands {
 	private String name;
 
 	@Column(name = "vehicle_type")
+	@Enumerated(EnumType.STRING)
 	private VehicleType vehicleType;
 
 	public Integer getId() {
@@ -61,4 +64,10 @@ public class Brands {
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	public String toString() {
+		return "Brands [id=" + id + ", name=" + name + ", vehicleType=" + vehicleType + "]";
+	}
+
+	
 }

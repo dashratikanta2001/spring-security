@@ -1,6 +1,7 @@
 package com.ovms.dao.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -39,13 +40,13 @@ public class BrandsDaoImpl implements BrandsDao {
 	}
 
 	@Override
-	public Brands find(Brands brands) {
+	public Brands find(String vehicleBrand, VehicleType vehicleType) {
 		// TODO Auto-generated method stub
 
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Brands.class);
 
-		criteria.add(Restrictions.eq("name", brands.getName()));
-		criteria.add(Restrictions.eq("vehicleType", brands.getVehicleType()));
+		criteria.add(Restrictions.eq("name", vehicleBrand));
+		criteria.add(Restrictions.eq("vehicleType", vehicleType));
 
 		Brands brand = (Brands) criteria.uniqueResult();
 
@@ -56,12 +57,23 @@ public class BrandsDaoImpl implements BrandsDao {
 	@Override
 	public List<Brands> findByvehicleType(VehicleType vehicleType) {
 		// TODO Auto-generated method stub
-		
+
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Brands.class);
-		
+
 		criteria.add(Restrictions.eq("vehicleType", vehicleType));
-		
+
 		return criteria.list();
+	}
+
+	@Override
+	public Brands findBrandName(String brand) {
+		// TODO Auto-generated method stub
+
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Brands.class);
+
+		criteria.add(Restrictions.eq("name", brand));
+
+		return (Brands) criteria.setMaxResults(1).uniqueResult();
 	}
 
 }

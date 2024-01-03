@@ -14,4 +14,8 @@ public interface ShowroomService {
 	CustomeResponse<?> findAll ();
 	
 	CustomeResponse<?> findByVehicleType(String type);
+
+	CustomeResponse<?> findByVehicleBrand(String brand);
+	
+	CustomeResponse<?> findByCity(String city);
 }

@@ -12,8 +12,10 @@ public interface BrandsDao {
 	
 	List<Brands> allBrands();
 	
-	Brands find(Brands brands);
+	Brands find(String vehicleBrand, VehicleType vehicleType);
 	
 	List<Brands> findByvehicleType(VehicleType vehicleType);
+
+	Brands findBrandName(String brand);
 	
 }

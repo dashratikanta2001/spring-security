@@ -8,6 +8,8 @@ import com.ovms.enums.VehicleType;
 public interface ShowroomDao {
 
 	Showroom save(Showroom showroom);
+	
+	Showroom findById(Integer id);
 
 	List<Showroom> findAll();
 

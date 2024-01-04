@@ -24,7 +24,7 @@ public class ShowroomServiceImpl implements ShowroomService {
 	private ShowroomDao showroomDao;
 
 	@Autowired
-	private BrandsDao brandsDao;
+	private static BrandsDao brandsDao;
 
 	@Override
 	public CustomeResponse<?> save(ShowroomDto showroomDto) {
@@ -94,7 +94,7 @@ public class ShowroomServiceImpl implements ShowroomService {
 
 	
 	
-	public Showroom dtoToShowroom(ShowroomDto showroomDto) {
+	public static Showroom dtoToShowroom(ShowroomDto showroomDto) {
 		// TODO Auto-generated method stub
 		Showroom showroom = new Showroom();
 
@@ -110,7 +110,15 @@ public class ShowroomServiceImpl implements ShowroomService {
 			} catch (Exception e) {
 				throw new InvalidVehicleTypeException("Invalid Vehicle Type.");
 			}
-			Brands brands = brandsDao.find(showroomDto.getVehicleBrand(), valueOfVehicleType);
+			Brands brands = new Brands();
+			try {
+				String vehicleBrand = showroomDto.getVehicleBrand();
+				brands= brandsDao.find(vehicleBrand, valueOfVehicleType);
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+			Integer a=0;
 			if (brands == null) {
 				throw new InvalidVehicleTypeException("Invalid vehicle Brand");
 			}
@@ -121,7 +129,7 @@ public class ShowroomServiceImpl implements ShowroomService {
 		return showroom;
 	}
 
-	public ShowroomDto ShowroomToDto(Showroom showroom) {
+	public static ShowroomDto ShowroomToDto(Showroom showroom) {
 		// TODO Auto-generated method stub
 
 		ShowroomDto showroomDto = new ShowroomDto();
@@ -132,7 +140,12 @@ public class ShowroomServiceImpl implements ShowroomService {
 		showroomDto.setEmail(showroom.getEmail());
 		showroomDto.setVehicleBrand(showroom.getBrand().getName());
 //		showroomDto.setVehicleType(showroom.getVehicleType().name());
+		try
+		{
 		showroomDto.setVehicleType(showroom.getBrand().getVehicleType().name());
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
 
 		return showroomDto;
 	}

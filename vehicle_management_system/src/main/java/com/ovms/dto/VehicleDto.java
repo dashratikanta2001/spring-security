@@ -2,9 +2,10 @@ package com.ovms.dto;
 
 import java.util.Date;
 
-import com.ovms.entity.Brands;
-import com.ovms.entity.Customer;
-import com.ovms.entity.Showroom;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class VehicleDto {
 
@@ -12,19 +13,25 @@ public class VehicleDto {
 
 	private String vehicleNumber;
 
+	@Size(min = 11, max = 17, message = "Engine number range from 11 to 17 digits")
 	private String engineNumber;
 
+	@Size(min = 17, max = 17, message = "Chesis number must be 17 digits")
 	private String chesisNumber;
 
+	@JsonFormat(pattern = "yyyy/MM/dd")
 	private Date regDate;
 
+	@JsonFormat(pattern = "yyyy/MM/dd")
 	private Date assignDate;
 
-	private Brands brand;
+//	private Brands brand;
 
-	private Showroom showroom;
+	//private Integer showroomId;
+	
+	private ShowroomDto showroom;
 
-	private Customer customer;
+//	private Customer customer;
 
 	public Integer getId() {
 		return id;
@@ -74,29 +81,37 @@ public class VehicleDto {
 		this.assignDate = assignDate;
 	}
 
-	public Brands getBrand() {
-		return brand;
-	}
+//	public Brands getBrand() {
+//		return brand;
+//	}
+//
+//	public void setBrand(Brands brand) {
+//		this.brand = brand;
+//	}
 
-	public void setBrand(Brands brand) {
-		this.brand = brand;
-	}
-
-	public Showroom getShowroom() {
+	public ShowroomDto getShowroom() {
 		return showroom;
 	}
 
-	public void setShowroom(Showroom showroom) {
+	public void setShowroom(ShowroomDto showroom) {
 		this.showroom = showroom;
 	}
 
-	public Customer getCustomer() {
-		return customer;
-	}
+//	public Customer getCustomer() {
+//		return customer;
+//	}
+//
+//	public void setCustomer(Customer customer) {
+//		this.customer = customer;
+//	}
 
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
-	}
+//	public Integer getShowroomId() {
+//		return showroomId;
+//	}
+//
+//	public void setShowroomId(Integer showroomId) {
+//		this.showroomId = showroomId;
+//	}
 
 
 }

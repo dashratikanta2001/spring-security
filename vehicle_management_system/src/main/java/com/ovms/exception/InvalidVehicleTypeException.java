@@ -1,4 +1,4 @@
-package com.ovms.exception;
+	package com.ovms.exception;
 
 public class InvalidVehicleTypeException extends RuntimeException{
 

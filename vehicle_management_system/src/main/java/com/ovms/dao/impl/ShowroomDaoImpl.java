@@ -90,6 +90,14 @@ public class ShowroomDaoImpl implements ShowroomDao {
 		criteria.add(Restrictions.eq("address", city));
 		return criteria.list();
 	}
+
+	@Override
+	public Showroom findById(Integer id) {
+		// TODO Auto-generated method stub
+		
+		Showroom showroom = sessionFactory.getCurrentSession().get(Showroom.class, id);
+		return showroom;
+	}
 	
 	
 	//Just trying 

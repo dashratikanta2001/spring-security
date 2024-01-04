@@ -41,10 +41,10 @@ public class Vehicle {
 	@Column(name = "assign_date")
 	private Date assignDate;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Brands brand;
+//	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//	private Brands brand;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "showroom_id", referencedColumnName = "id")
 	private Showroom showroom;
 
@@ -100,13 +100,13 @@ public class Vehicle {
 		this.assignDate = assignDate;
 	}
 
-	public Brands getBrand() {
-		return brand;
-	}
-
-	public void setBrand(Brands brand) {
-		this.brand = brand;
-	}
+//	public Brands getBrand() {
+//		return brand;
+//	}
+//
+//	public void setBrand(Brands brand) {
+//		this.brand = brand;
+//	}
 
 	public Showroom getShowroom() {
 		return showroom;
@@ -131,19 +131,19 @@ public class Vehicle {
 	
 	
 	
-	public Vehicle(Integer id, String vehicleNumber, String engineNumber, String chesisNumber, Date regDate,
-			Date assignDate, Brands brand, Showroom showroom, Customer customer) {
-		super();
-		this.id = id;
-		this.vehicleNumber = vehicleNumber;
-		this.engineNumber = engineNumber;
-		this.chesisNumber = chesisNumber;
-		this.regDate = regDate;
-		this.assignDate = assignDate;
-		this.brand = brand;
-		this.showroom = showroom;
-		this.customer = customer;
-	}
+//	public Vehicle(Integer id, String vehicleNumber, String engineNumber, String chesisNumber, Date regDate,
+//			Date assignDate, Brands brand, Showroom showroom, Customer customer) {
+//		super();
+//		this.id = id;
+//		this.vehicleNumber = vehicleNumber;
+//		this.engineNumber = engineNumber;
+//		this.chesisNumber = chesisNumber;
+//		this.regDate = regDate;
+//		this.assignDate = assignDate;
+//		this.brand = brand;
+//		this.showroom = showroom;
+//		this.customer = customer;
+//	}
 
 
 }	

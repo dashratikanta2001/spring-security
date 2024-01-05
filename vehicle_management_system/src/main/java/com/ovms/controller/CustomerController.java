@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ovms.dto.CustomerDto;
 import com.ovms.response.CustomeResponse;
+import com.ovms.response.ErrorResponse;
 import com.ovms.service.CustomerService;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -33,7 +34,8 @@ public class CustomerController {
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 
-		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+//		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()), HttpStatus.BAD_REQUEST);
 
 	}
 
@@ -45,7 +47,8 @@ public class CustomerController {
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 
-		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+//		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()), HttpStatus.BAD_REQUEST);
 
 	}
 
@@ -57,7 +60,8 @@ public class CustomerController {
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 
-		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+//		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()), HttpStatus.BAD_REQUEST);
 
 	}
 
@@ -70,7 +74,8 @@ public class CustomerController {
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 
-		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+//		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()), HttpStatus.BAD_REQUEST);
 	}
 
 }

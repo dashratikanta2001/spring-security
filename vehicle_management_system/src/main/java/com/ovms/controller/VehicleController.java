@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ovms.dto.VehicleDto;
 import com.ovms.response.CustomeResponse;
+import com.ovms.response.ErrorResponse;
 import com.ovms.service.VehicleService;
 import com.ovms.util.RegexPattern;
 
@@ -35,7 +36,7 @@ public class VehicleController {
 			return new ResponseEntity<>(response, HttpStatus.OK);			
 		}
 		
-		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);			
+		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()), HttpStatus.BAD_REQUEST);	
 	}
 	
 	
@@ -48,7 +49,7 @@ public class VehicleController {
 			return new ResponseEntity<>(response, HttpStatus.OK);			
 		}
 		
-		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()), HttpStatus.BAD_REQUEST);	
 	}
 	
 	@GetMapping("/{vehicleNumber}")
@@ -61,11 +62,12 @@ public class VehicleController {
 				return new ResponseEntity<>(response, HttpStatus.OK);
 			}
 			
-			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);			
+//			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);			
+			return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()), HttpStatus.BAD_REQUEST);	
 			
 		}
-		
-		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(new ErrorResponse<>(HttpStatus.BAD_REQUEST.value(),"Invalid Vehicle number format."), HttpStatus.BAD_REQUEST);	
+
 	}
 	
 	
@@ -79,7 +81,7 @@ public class VehicleController {
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 		
-		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()), HttpStatus.BAD_REQUEST);	
 	}
 	
 //	@GetMapping("/showroom/{id}/registered")

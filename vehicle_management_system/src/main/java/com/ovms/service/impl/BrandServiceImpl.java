@@ -46,6 +46,9 @@ public class BrandServiceImpl implements BrandService {
 	public CustomeResponse<?> findAll() {
 		// TODO Auto-generated method stub
 		List<Brands> allBrands = brandsDao.allBrands();
+		if (allBrands.isEmpty()) {
+			return new CustomeResponse<>(null, HttpStatus.BAD_REQUEST.value(), "No brand found");			
+		}
 
 		List<BrandDto> allBrandDto = allBrands.stream().map(brand -> BrandToDto(brand)).collect(Collectors.toList());
 

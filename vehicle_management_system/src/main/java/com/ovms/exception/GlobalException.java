@@ -1,7 +1,9 @@
 package com.ovms.exception;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +34,13 @@ public class GlobalException {
 			resp.put(fieldName, message);
 
 		});
+		
+		Map<String, Object> erResp = new LinkedHashMap<String, Object>();
+		
+		erResp.put("status", HttpStatus.BAD_REQUEST.value());
+		erResp.put("message", resp);
 
-		return new ResponseEntity<>(new ErrorResponse<>(HttpStatus.BAD_REQUEST.value(), ex.getMessage()), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(erResp, HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -42,4 +49,6 @@ public class GlobalException {
 		
 		return new ResponseEntity<>(new ErrorResponse<>(HttpStatus.BAD_REQUEST.value(), ex.getMessage()), HttpStatus.BAD_REQUEST);
 	}
+	
+	
 }

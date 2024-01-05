@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ovms.dto.ShowroomDto;
 import com.ovms.response.CustomeResponse;
+import com.ovms.response.ErrorResponse;
 import com.ovms.service.ShowroomService;
 
 @RestController
@@ -32,7 +33,9 @@ public class ShowroomController {
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 
-		return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+//		return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()),
+				HttpStatus.BAD_REQUEST);
 	}
 
 	@GetMapping
@@ -42,36 +45,45 @@ public class ShowroomController {
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 
-		return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+//		return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()),
+				HttpStatus.BAD_REQUEST);
 	}
-	
-	
+
 	@GetMapping("/type/{vehicleType}")
-	public ResponseEntity<?> GetByVehicleType(@PathVariable ("vehicleType") String type)
-	{
+	public ResponseEntity<?> GetByVehicleType(@PathVariable("vehicleType") String type) {
 		CustomeResponse<?> response = showroomService.findByVehicleType(type);
-		
-		
-		return new ResponseEntity<>(response, HttpStatus.OK);
+
+		if (response.getStatus() == HttpStatus.OK.value()) {
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		}
+
+		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()),
+				HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@GetMapping("/brand/{vehicleBrand}")
-	public ResponseEntity<?> GetByVehicleBrand(@PathVariable ("vehicleBrand") String brand)
-	{
+	public ResponseEntity<?> GetByVehicleBrand(@PathVariable("vehicleBrand") String brand) {
 		CustomeResponse<?> response = showroomService.findByVehicleBrand(brand);
-		
-		
-		return new ResponseEntity<>(response, HttpStatus.OK);
+
+		if (response.getStatus() == HttpStatus.OK.value()) {
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		}
+
+		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()),
+				HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@GetMapping("/city/{city}")
-	public ResponseEntity<?> GetByVehicleCity(@PathVariable ("city") String city)
-	{
+	public ResponseEntity<?> GetByVehicleCity(@PathVariable("city") String city) {
 		CustomeResponse<?> response = showroomService.findByCity(city);
-		
-		
-		return new ResponseEntity<>(response, HttpStatus.OK);
+
+		if (response.getStatus() == HttpStatus.OK.value()) {
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		}
+
+		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()),
+				HttpStatus.BAD_REQUEST);
 	}
-	
 
 }

@@ -82,6 +82,10 @@ public class ShowroomServiceImpl implements ShowroomService {
 			VehicleType valueOfVehicleType = VehicleType.valueOf(VehicleType.class, type.toUpperCase());
 			List<Showroom> showroomList = showroomDao.findByType(valueOfVehicleType);
 			
+			if (showroomList.isEmpty()) {
+				return new CustomeResponse<>(null, HttpStatus.BAD_REQUEST.value(), "No showroom found.");
+			}
+			
 			List<ShowroomDto> showRoomDtos = showroomList.stream().map(list -> ShowroomToDto(list)).collect(Collectors.toList());
 			return new CustomeResponse<>(showRoomDtos, HttpStatus.OK.value(), "Show room found");
 		} catch (Exception e) {

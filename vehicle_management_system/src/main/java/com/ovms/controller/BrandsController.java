@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ovms.dto.BrandDto;
 import com.ovms.response.CustomeResponse;
+import com.ovms.response.ErrorResponse;
 import com.ovms.service.BrandService;
 
 
@@ -33,7 +34,7 @@ public class BrandsController {
 			 return new ResponseEntity<>(response, HttpStatus.OK);			
 		}
 		 
-		 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		 return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()), HttpStatus.BAD_REQUEST);
 		
 	}
 	
@@ -51,8 +52,12 @@ public class BrandsController {
 	public ResponseEntity<?> findAll() {
 		
 		CustomeResponse<?> response = brandService.findAll();
+		if (response.getStatus() == HttpStatus.OK.value()) {
+			return new ResponseEntity<>(response, HttpStatus.OK);			
+		}
 		
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()), HttpStatus.BAD_REQUEST);
+		
 	}
 	
 	

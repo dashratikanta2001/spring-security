@@ -1,18 +1,12 @@
 package com.ovms.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.ovms.dao.CustomerDao;
-import com.ovms.dao.VehicleDao;
 import com.ovms.dto.CustomerDto;
-import com.ovms.dto.VehicleDto;
 import com.ovms.entity.Customer;
-import com.ovms.entity.Vehicle;
 import com.ovms.response.CustomeResponse;
 import com.ovms.service.CustomerService;
 
@@ -21,9 +15,6 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	private CustomerDao customerDao;
-	
-	@Autowired
-	private VehicleDao vehicleDao;
 
 	@Override
 	public CustomeResponse<?> save(CustomerDto customerDto) {
@@ -67,63 +58,19 @@ public class CustomerServiceImpl implements CustomerService {
 
 		return new CustomeResponse<>(CustomerToDto(customer), HttpStatus.OK.value(), "Data updated.");
 	}
-	
 
-	@Override
-	public CustomeResponse<?> showAllVehicles(String email) {
-		// TODO Auto-generated method stub
-		Customer customer = customerDao.findByEmail(email);
-		if (customer == null) {
-			return new CustomeResponse<>(null, HttpStatus.BAD_REQUEST.value(), "Email not found.");
-		}
-		
-		List<Vehicle> vehicleList =vehicleDao.findByCustomer(customer);
-		
-		if (vehicleList.isEmpty()) {
-			return new CustomeResponse<>(CustomerToDto(customer), HttpStatus.BAD_REQUEST.value(), "No vehicle found for the customer.");
-		}
-		
-		List<VehicleDto> vehicleDtos = vehicleList.stream().map(vehicle -> VehicleServiceImpl.vehicleToDto(vehicle)).collect(Collectors.toList());
-		
-		CustomerDto customerDto = CustomerToDto(customer, vehicleDtos);
-		
-		return new CustomeResponse<>(customerDto, HttpStatus.OK.value(), "User found with vehicle");
-	}
-
-	
-	
-	
-
-	public static Customer dtoToCustomer(CustomerDto customerDto) {
+	public Customer dtoToCustomer(CustomerDto customerDto) {
 		Customer customer = new Customer(customerDto.getName(), customerDto.getEmail(), customerDto.getPhoneNo(),
 				customerDto.getAddress());
 
 		return customer;
 	}
 
-	public static CustomerDto CustomerToDto(Customer customer) {
+	public CustomerDto CustomerToDto(Customer customer) {
 		CustomerDto customerDto = new CustomerDto(customer.getId(), customer.getName(), customer.getEmail(),
 				customer.getPhoneNo(), customer.getAddress());
 
 		return customerDto;
-	}
-	
-	private  CustomerDto CustomerToDto(Customer customer, List<VehicleDto> vehicles) {
-		
-		CustomerDto customerDto = new CustomerDto();
-		
-		if(customer!=null) {
-			customerDto.setId(customer.getId());
-			customerDto.setName(customer.getName());
-			customerDto.setEmail(customer.getEmail());
-			customerDto.setAddress(customer.getAddress());
-			customerDto.setPhoneNo(customer.getPhoneNo());
-			customerDto.setVehicles(vehicles);
-			
-			return customerDto;
-		}
-		
-		return null;
 	}
 
 }

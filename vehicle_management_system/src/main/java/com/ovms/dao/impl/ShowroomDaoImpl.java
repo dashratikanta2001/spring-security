@@ -44,8 +44,6 @@ public class ShowroomDaoImpl implements ShowroomDao {
 
 		List<Showroom> showrooms = sessionFactory.getCurrentSession().createQuery("from Showroom", Showroom.class)
 				.getResultList();
-		
-		System.out.println("Showroom list = == = "+showrooms);
 		return showrooms;
 	}
 

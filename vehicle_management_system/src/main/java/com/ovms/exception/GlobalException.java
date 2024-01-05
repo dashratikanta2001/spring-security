@@ -9,9 +9,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-
-import com.ovms.response.ErrorResponse;
 
 @RestControllerAdvice
 public class GlobalException {
@@ -19,7 +16,7 @@ public class GlobalException {
 	@ExceptionHandler(InvalidVehicleTypeException.class)
 	public ResponseEntity<?> InvalidVehicleTypeExceptionHandler(InvalidVehicleTypeException ex)
 	{
-		return new ResponseEntity<>(new ErrorResponse<>(HttpStatus.BAD_REQUEST.value(), ex.getMessage()), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
@@ -33,13 +30,6 @@ public class GlobalException {
 
 		});
 
-		return new ResponseEntity<>(new ErrorResponse<>(HttpStatus.BAD_REQUEST.value(), ex.getMessage()), HttpStatus.BAD_REQUEST);
-	}
-	
-	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
-	public ResponseEntity<?> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
-		Map<String, String> resp = new HashMap<String, String>();
-		
-		return new ResponseEntity<>(new ErrorResponse<>(HttpStatus.BAD_REQUEST.value(), ex.getMessage()), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(resp, HttpStatus.BAD_REQUEST);
 	}
 }

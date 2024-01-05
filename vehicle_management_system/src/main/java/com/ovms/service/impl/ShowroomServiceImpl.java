@@ -24,43 +24,15 @@ public class ShowroomServiceImpl implements ShowroomService {
 	private ShowroomDao showroomDao;
 
 	@Autowired
-	private BrandsDao brandsDao;
+	private static BrandsDao brandsDao;
 
 	@Override
 	public CustomeResponse<?> save(ShowroomDto showroomDto) {
 		// TODO Auto-generated method stub
-		if (showroomDto.getVehicleType() != null && showroomDto.getVehicleBrand() != null) {
-			VehicleType valueOfVehicleType;
-			try {
-				valueOfVehicleType = VehicleType.valueOf(VehicleType.class, showroomDto.getVehicleType().toUpperCase());
 
-			} catch (Exception e) {
-				throw new InvalidVehicleTypeException("Invalid Vehicle Type.");
-			}
-			Brands brands = new Brands();
-			try {
-				String vehicleBrand = showroomDto.getVehicleBrand();
-				brands= brandsDao.find(vehicleBrand, valueOfVehicleType);
-			} catch (Exception e) {
-				// TODO: handle exception
-				e.printStackTrace();
-			}
-			if (brands == null) {
-				throw new InvalidVehicleTypeException("Invalid vehicle Brand");
-			}
-//			showroom.setBrand(brands);
-//			showroom.setVehicleType(brands.getVehicleType());
-			Showroom dtoToShowroom = dtoToShowroom(showroomDto);
-			dtoToShowroom.setBrand(brands);
-			
-			Showroom showroom = showroomDao.save(dtoToShowroom);
-			if (showroom!=null) {
-				return new CustomeResponse<>(ShowroomToDto(showroom), HttpStatus.OK.value(), "Showroom added.");				
-			}
-			
-		}
-		
-		return new CustomeResponse<>(null, HttpStatus.BAD_REQUEST.value(), "showroom not added.");
+		Showroom showroom = showroomDao.save(dtoToShowroom(showroomDto));
+
+		return new CustomeResponse<>(ShowroomToDto(showroom), HttpStatus.OK.value(), "Showroom added.");
 	}
 
 	@Override
@@ -96,7 +68,6 @@ public class ShowroomServiceImpl implements ShowroomService {
 		// TODO Auto-generated method stub
 		
 		Brands brands= brandsDao.findBrandName(brand);
-		
 		if (brands == null) {
 			throw new InvalidVehicleTypeException("Invalid brand name");
 		}
@@ -131,30 +102,29 @@ public class ShowroomServiceImpl implements ShowroomService {
 		showroom.setAddress(showroomDto.getAddress());
 		showroom.setPhoneNo(showroomDto.getPhoneNo());
 		showroom.setEmail(showroomDto.getEmail());
-//		showroom.setBrand(showroomDto.get);
-		
-//		if (showroomDto.getVehicleType() != null && showroomDto.getVehicleBrand() != null) {
-//			VehicleType valueOfVehicleType;
-//			try {
-//				valueOfVehicleType = VehicleType.valueOf(VehicleType.class, showroomDto.getVehicleType().toUpperCase());
-//
-//			} catch (Exception e) {
-//				throw new InvalidVehicleTypeException("Invalid Vehicle Type.");
-//			}
-//			Brands brands = new Brands();
-//			try {
-//				String vehicleBrand = showroomDto.getVehicleBrand();
-//				brands= brandsDao.find(vehicleBrand, valueOfVehicleType);
-//			} catch (Exception e) {
-//				// TODO: handle exception
-//				e.printStackTrace();
-//			}
-//			if (brands == null) {
-//				throw new InvalidVehicleTypeException("Invalid vehicle Brand");
-//			}
-//			showroom.setBrand(brands);
-////			showroom.setVehicleType(brands.getVehicleType());
-//		}
+		if (showroomDto.getVehicleType() != null && showroomDto.getVehicleBrand() != null) {
+			VehicleType valueOfVehicleType;
+			try {
+				valueOfVehicleType = VehicleType.valueOf(VehicleType.class, showroomDto.getVehicleType().toUpperCase());
+
+			} catch (Exception e) {
+				throw new InvalidVehicleTypeException("Invalid Vehicle Type.");
+			}
+			Brands brands = new Brands();
+			try {
+				String vehicleBrand = showroomDto.getVehicleBrand();
+				brands= brandsDao.find(vehicleBrand, valueOfVehicleType);
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+			Integer a=0;
+			if (brands == null) {
+				throw new InvalidVehicleTypeException("Invalid vehicle Brand");
+			}
+			showroom.setBrand(brands);
+//			showroom.setVehicleType(brands.getVehicleType());
+		}
 
 		return showroom;
 	}

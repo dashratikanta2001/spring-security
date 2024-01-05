@@ -10,6 +10,4 @@ public interface CustomerService {
 	CustomeResponse<?> update(String email,CustomerDto customerDto);
 	
 	CustomeResponse<?> findByEmail(String email);
-
-	CustomeResponse<?> showAllVehicles(String email);
 }

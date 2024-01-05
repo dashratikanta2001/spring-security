@@ -2,7 +2,6 @@ package com.ovms.dao;
 
 import java.util.List;
 
-import com.ovms.entity.Customer;
 import com.ovms.entity.Showroom;
 import com.ovms.entity.Vehicle;
 
@@ -23,11 +22,7 @@ public interface VehicleDao {
 	
 	Integer countLastVehicleNumber(Showroom showroom);
 
-	List<Vehicle> findByShowroom(Showroom showroom, Boolean registered);
+	List<Vehicle> findByShowroom(Showroom showroom);
 	
 	List<Vehicle> findByShowroomAndBrand(Integer showroom, Integer brand);
-
-	Vehicle findById(Integer v_id);
-
-	List<Vehicle> findByCustomer(Customer customer);
 }

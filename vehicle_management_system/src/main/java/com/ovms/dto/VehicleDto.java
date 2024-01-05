@@ -2,6 +2,7 @@ package com.ovms.dto;
 
 import java.util.Date;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -30,7 +31,7 @@ public class VehicleDto {
 	
 	private ShowroomDto showroom;
 
-	private CustomerDto customer;
+//	private Customer customer;
 
 	public Integer getId() {
 		return id;
@@ -96,13 +97,13 @@ public class VehicleDto {
 		this.showroom = showroom;
 	}
 
-	public CustomerDto getCustomer() {
-		return customer;
-	}
-
-	public void setCustomer(CustomerDto customer) {
-		this.customer = customer;
-	}
+//	public Customer getCustomer() {
+//		return customer;
+//	}
+//
+//	public void setCustomer(Customer customer) {
+//		this.customer = customer;
+//	}
 
 //	public Integer getShowroomId() {
 //		return showroomId;

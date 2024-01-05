@@ -7,6 +7,4 @@ public interface CustomerDao {
 	Customer findByEmail(String email);
 	
 	Customer save(Customer customer);
-
-	Customer findById(Integer u_id);
 }

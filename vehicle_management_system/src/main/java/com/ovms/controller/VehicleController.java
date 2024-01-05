@@ -12,13 +12,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ovms.dto.VehicleDto;
 import com.ovms.response.CustomeResponse;
 import com.ovms.service.VehicleService;
-import com.ovms.util.RegexPattern;
 
 @RestController
 @RequestMapping("/api/vehicle")
@@ -40,52 +38,14 @@ public class VehicleController {
 	
 	
 	@GetMapping("/showroom/{id}")
-	public ResponseEntity<?> showByShowroom(@PathVariable("id") Integer id, 
-			@RequestParam(value = "registered", required = false) Boolean registered) {
+	public ResponseEntity<?> showByShowroom(@PathVariable("id") Integer id) {
 		
-		CustomeResponse<List<VehicleDto>> response = vehicleService.findByShowroomId(id, registered);
+		CustomeResponse<List<VehicleDto>> response = vehicleService.findByShowroomId(id);
 		if (response.getStatus() == HttpStatus.OK.value()) {
 			return new ResponseEntity<>(response, HttpStatus.OK);			
 		}
 		
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
-	
-	@GetMapping("/{vehicleNumber}")
-	public ResponseEntity<?> getMethodName(@PathVariable("vehicleNumber") String vehicleNumber) {
-		
-		if (RegexPattern.checkVehicleNumberPattern(vehicleNumber)) {
-			CustomeResponse<VehicleDto> response = vehicleService.findByVehicleNumber(vehicleNumber);
-			
-			if (response.getStatus() == HttpStatus.OK.value()) {
-				return new ResponseEntity<>(response, HttpStatus.OK);
-			}
-			
-			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);			
-			
-		}
-		
-		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-	}
-	
-	
-	@PostMapping("{v_id}/register/user/{u_id}")
-	public ResponseEntity<?> postMethodName(@PathVariable("v_id") Integer v_id, @PathVariable("u_id") Integer u_id) {
-		//TODO: process POST request
-		
-		CustomeResponse<VehicleDto> response = vehicleService.registerVehicleToUser(v_id, u_id);
-		
-		if (response.getStatus() == HttpStatus.OK.value()) {
-			return new ResponseEntity<>(response, HttpStatus.OK);
-		}
-		
-		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-	}
-	
-//	@GetMapping("/showroom/{id}/registered")
-//	public ResponseEntity<?> getMethodName(@RequestParam String param) {
-//		return new SomeData();
-//	}
-	
 	
 }

@@ -44,12 +44,4 @@ public class CustomerDaoImpl implements CustomerDao {
 		return customer;
 	}
 
-	@Override
-	public Customer findById(Integer u_id) {
-		// TODO Auto-generated method stub
-		Customer customer = sessionFactory.getCurrentSession().get(Customer.class, u_id);
-		System.out.println("Customer = "+customer);
-		return customer;
-	}
-
 }

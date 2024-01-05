@@ -2,12 +2,9 @@ package com.ovms.dto;
 
 import java.util.List;
 
-import javax.validation.constraints.Size;
+import com.ovms.entity.Brands;
+import com.ovms.entity.Vehicle;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
-@JsonInclude(Include.NON_NULL)
 public class ShowroomDto {
 
 	private int id;
@@ -16,7 +13,6 @@ public class ShowroomDto {
 
 	private String address;
 
-	@Size(min = 10, max = 13, message = "Phone number must be minimum 10 digits")
 	private String phoneNo;
 
 	private String email;
@@ -27,7 +23,6 @@ public class ShowroomDto {
 
 //	private BrandDto brand;
 
-	
 	private List<VehicleDto> vehicle;
 	
 

@@ -1,5 +1,7 @@
 package com.ovms.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +24,7 @@ public class ShowroomController {
 	private ShowroomService showroomService;
 
 	@PostMapping
-	public ResponseEntity<?> saveShowroom(@RequestBody ShowroomDto showroomDto) {
+	public ResponseEntity<?> saveShowroom(@Valid @RequestBody ShowroomDto showroomDto) {
 		// TODO: process POST request
 		CustomeResponse<?> response = showroomService.save(showroomDto);
 

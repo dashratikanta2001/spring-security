@@ -10,9 +10,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.ovms.dao.BrandsDao;
+import com.ovms.dao.CustomerDao;
 import com.ovms.dao.ShowroomDao;
 import com.ovms.dao.VehicleDao;
 import com.ovms.dto.VehicleDto;
+import com.ovms.entity.Customer;
 import com.ovms.entity.Showroom;
 import com.ovms.entity.Vehicle;
 import com.ovms.enums.VehicleType;
@@ -31,6 +33,9 @@ public class VehicleServiceImpl implements VehicleService {
 
 	@Autowired
 	private ShowroomDao showroomDao;
+	
+	@Autowired
+	private CustomerDao customerDao;
 
 	@Override
 	public CustomeResponse<VehicleDto> addNewVehicle(VehicleDto vehicleDto) {
@@ -70,15 +75,14 @@ public class VehicleServiceImpl implements VehicleService {
 	
 	
 	@Override
-	public CustomeResponse<List<VehicleDto>> findByShowroomId(Integer id) {
+	public CustomeResponse<List<VehicleDto>> findByShowroomId(Integer id, Boolean registered) {
 		// TODO Auto-generated method stub
 		
 		Showroom showroom = showroomDao.findById(id);
 		if (showroom == null) {
 			throw new InvalidVehicleTypeException("Showroom id " + id + " not exist.");
 		}
-		
-		List<Vehicle> byShowroom = vehicleDao.findByShowroom(showroom);
+		List<Vehicle> byShowroom = vehicleDao.findByShowroom(showroom, registered);
 		
 		if (!byShowroom.isEmpty()) {
 			
@@ -87,12 +91,55 @@ public class VehicleServiceImpl implements VehicleService {
 			return new CustomeResponse<>(vehicleDtos, HttpStatus.OK.value(), "Vehicle Found");
 		}
 		
-		
 		return new CustomeResponse<>(null, HttpStatus.OK.value(), "No Vehicle found");
 	}
 	
+
+
+	@Override
+	public CustomeResponse<VehicleDto> findByVehicleNumber(String vehicleNumber) {
+		// TODO Auto-generated method stub
+		Vehicle vehicle = vehicleDao.findByRegistrationNo(vehicleNumber);
+		
+		if (vehicle != null) {
+			return new CustomeResponse<>(vehicleToDto(vehicle), HttpStatus.OK.value(), "Vehicle found");
+		}
+		
+		return new CustomeResponse<>(null, HttpStatus.BAD_REQUEST.value(), "Invalid vehicle number");
+	}
+
 	
-	
+
+
+	@Override
+	public CustomeResponse<VehicleDto> registerVehicleToUser(Integer v_id, Integer u_id) {
+		// TODO Auto-generated method stub
+		
+		Vehicle vehicle=vehicleDao.findById(v_id);
+		
+		if (vehicle== null) {
+			throw new InvalidVehicleTypeException("Vehicle Number not found");
+		}
+		
+		if (vehicle.getCustomer() !=null) {
+			throw new InvalidVehicleTypeException("Vehicle is already registered for a Customer");
+		}
+		
+		Customer customer = customerDao.findById(u_id);
+		
+		if (customer == null) {
+			throw new InvalidVehicleTypeException("Customer not found");
+		}
+		
+		vehicle.setRegDate(new Date());
+		vehicle.setCustomer(customer);
+		
+		Vehicle registerVehicle = vehicleDao.RegisterVehicle(vehicle);
+		
+		return new CustomeResponse<>(vehicleToDto(registerVehicle), HttpStatus.OK.value(), "Vehicle found");
+	}
+
+
 	
 	
 	
@@ -122,9 +169,15 @@ public class VehicleServiceImpl implements VehicleService {
 		vehicleDto.setAssignDate(vehicle.getAssignDate());
 		vehicleDto.setRegDate(vehicle.getRegDate());
 
-		vehicleDto.setShowroom(ShowroomServiceImpl.ShowroomToDto(vehicle.getShowroom()));
+		if (vehicle.getShowroom()!=null) {
+			vehicleDto.setShowroom(ShowroomServiceImpl.ShowroomToDto(vehicle.getShowroom()));			
+		}
+		
+		if (vehicle.getCustomer() !=null) {
+			vehicleDto.setCustomer(CustomerServiceImpl.CustomerToDto(vehicle.getCustomer()));			
+		}
 		return vehicleDto;
 	}
 
-	
+
 }

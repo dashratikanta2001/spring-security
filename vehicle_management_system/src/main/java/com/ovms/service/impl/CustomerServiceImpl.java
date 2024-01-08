@@ -5,14 +5,20 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.ovms.dao.CridentialMasterDao;
 import com.ovms.dao.CustomerDao;
+import com.ovms.dao.RoleDao;
 import com.ovms.dao.VehicleDao;
 import com.ovms.dto.CustomerDto;
 import com.ovms.dto.VehicleDto;
+import com.ovms.entity.CridentialMaster;
 import com.ovms.entity.Customer;
+import com.ovms.entity.Role;
 import com.ovms.entity.Vehicle;
+import com.ovms.enums.RoleType;
 import com.ovms.exception.InvalidVehicleTypeException;
 import com.ovms.response.CustomeResponse;
 import com.ovms.service.CustomerService;
@@ -26,6 +32,15 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	private VehicleDao vehicleDao;
+	
+	@Autowired
+	private RoleDao roleDao;
+	
+	@Autowired
+	private CridentialMasterDao cridentialMasterDao;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@Override
 	public CustomeResponse<?> save(CustomerDto customerDto) {
@@ -37,8 +52,18 @@ public class CustomerServiceImpl implements CustomerService {
 		if (customerDao.findByEmail(customerDto.getEmail()) == null) {
 			RegexPattern.validEmailPattern(customerDto.getEmail());
 			RegexPattern.validPhoneNumberPattern(customerDto.getPhoneNo());
-			Customer customer = customerDao.save(dtoToCustomer(customerDto));
-			return new CustomeResponse<>(CustomerToDto(customer), HttpStatus.OK.value(), "Customer added.");
+			Customer customer = dtoToCustomer(customerDto);
+			
+			Role role = roleDao.findRole(RoleType.ROLE_ADMIN);
+			customer.setRole(role);
+			Customer savedcustomer = customerDao.save(customer);
+			
+			String password = passwordEncoder.encode(customerDto.getEmail().substring(0, 4)+"@123");
+			
+			CridentialMaster cridentialMaster = new CridentialMaster(customerDto.getEmail(), password, customer);
+			cridentialMasterDao.addCridential(cridentialMaster);
+			
+			return new CustomeResponse<>(CustomerToDto(savedcustomer), HttpStatus.OK.value(), "Customer added.");
 		}
 
 		return new CustomeResponse<>(null, HttpStatus.BAD_REQUEST.value(), "Email id already exist.");

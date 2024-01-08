@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ovms.dto.ShowroomDto;
+import com.ovms.enums.RoleType;
 import com.ovms.response.CustomeResponse;
 import com.ovms.response.ErrorResponse;
 import com.ovms.service.ShowroomService;
@@ -41,13 +42,18 @@ public class ShowroomController {
 	@GetMapping
 	public ResponseEntity<?> getAllShowroom() {
 		CustomeResponse<?> response = showroomService.findAll();
-		if (response.getStatus() == HttpStatus.OK.value()) {
-			return new ResponseEntity<>(response, HttpStatus.OK);
-		}
-
-//		return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()),
-				HttpStatus.BAD_REQUEST);
+//		if (response.getStatus() == HttpStatus.OK.value()) {
+//			return new ResponseEntity<>(response, HttpStatus.OK);
+//		}
+//
+////		return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+//		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()),
+//				HttpStatus.BAD_REQUEST);
+		
+		
+		
+		return new ResponseEntity<>(RoleType.ROLE_ADMIN.toString(), HttpStatus.OK);
+		
 	}
 
 	@GetMapping("/type/{vehicleType}")

@@ -1,10 +1,15 @@
 package com.ovms.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -26,7 +31,11 @@ public class Customer {
 	
 	@Column(name = "address")
 	private String address;
-
+	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "role", referencedColumnName = "id")
+	private Role role;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -66,18 +75,30 @@ public class Customer {
 	public void setAddress(String address) {
 		this.address = address;
 	}
+	
+	
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
 
 	public Customer() {
 		super();
 		
 	}
 
-	public Customer(String name, String email, String phoneNo, String address) {
+	public Customer( String name, String email, String phoneNo, String address) {
 		super();
 		this.name = name;
 		this.email = email;
 		this.phoneNo = phoneNo;
 		this.address = address;
 	}
+
+	
 
 }

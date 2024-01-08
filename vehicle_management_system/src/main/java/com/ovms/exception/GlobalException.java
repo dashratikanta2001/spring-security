@@ -3,10 +3,10 @@ package com.ovms.exception;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,6 +20,12 @@ public class GlobalException {
 
 	@ExceptionHandler(InvalidVehicleTypeException.class)
 	public ResponseEntity<?> InvalidVehicleTypeExceptionHandler(InvalidVehicleTypeException ex)
+	{
+		return new ResponseEntity<>(new ErrorResponse<>(HttpStatus.BAD_REQUEST.value(), ex.getMessage()), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(UsernameNotFoundException.class)
+	public ResponseEntity<?> UsernameNotFoundException(UsernameNotFoundException ex)
 	{
 		return new ResponseEntity<>(new ErrorResponse<>(HttpStatus.BAD_REQUEST.value(), ex.getMessage()), HttpStatus.BAD_REQUEST);
 	}
@@ -48,6 +54,14 @@ public class GlobalException {
 		Map<String, String> resp = new HashMap<String, String>();
 		
 		return new ResponseEntity<>(new ErrorResponse<>(HttpStatus.BAD_REQUEST.value(), ex.getMessage()), HttpStatus.BAD_REQUEST);
+	}
+	
+	
+	@ExceptionHandler(UnauthorizeException.class)
+	public ResponseEntity<?> handleUnauthorizeException(UnauthorizeException ex) {
+		
+		return new ResponseEntity<>(new ErrorResponse<>(HttpStatus.UNAUTHORIZED.value(), ex.getMessage()), HttpStatus.UNAUTHORIZED);
+		
 	}
 	
 	

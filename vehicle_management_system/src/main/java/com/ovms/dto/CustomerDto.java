@@ -4,12 +4,8 @@ import java.util.List;
 
 import javax.validation.constraints.Size;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.ovms.entity.Customer;
 
 @JsonInclude(Include.NON_NULL)
 public class CustomerDto {

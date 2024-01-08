@@ -13,23 +13,30 @@ import com.ovms.dto.CustomerDto;
 import com.ovms.dto.VehicleDto;
 import com.ovms.entity.Customer;
 import com.ovms.entity.Vehicle;
+import com.ovms.exception.InvalidVehicleTypeException;
 import com.ovms.response.CustomeResponse;
 import com.ovms.service.CustomerService;
+import com.ovms.util.RegexPattern;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	private CustomerDao customerDao;
-	
+
 	@Autowired
 	private VehicleDao vehicleDao;
 
 	@Override
 	public CustomeResponse<?> save(CustomerDto customerDto) {
 		// TODO Auto-generated method stub
-
+		if (!RegexPattern.validEmailPattern(customerDto.getEmail())) {
+			throw new InvalidVehicleTypeException("Please provide a valid email id.");
+		}
+		
 		if (customerDao.findByEmail(customerDto.getEmail()) == null) {
+			RegexPattern.validEmailPattern(customerDto.getEmail());
+			RegexPattern.validPhoneNumberPattern(customerDto.getPhoneNo());
 			Customer customer = customerDao.save(dtoToCustomer(customerDto));
 			return new CustomeResponse<>(CustomerToDto(customer), HttpStatus.OK.value(), "Customer added.");
 		}
@@ -52,6 +59,9 @@ public class CustomerServiceImpl implements CustomerService {
 	public CustomeResponse<?> update(String email, CustomerDto customerDto) {
 		// TODO Auto-generated method stub
 		Customer customer = customerDao.findByEmail(email);
+		RegexPattern.validEmailPattern(customerDto.getEmail());
+		RegexPattern.validPhoneNumberPattern(customerDto.getPhoneNo());
+
 		if (customer == null) {
 			return new CustomeResponse<>(null, HttpStatus.BAD_REQUEST.value(), "Email not found");
 		}
@@ -60,14 +70,18 @@ public class CustomerServiceImpl implements CustomerService {
 		customer.setAddress(customerDto.getAddress());
 		customer.setPhoneNo(customerDto.getPhoneNo());
 
-		System.out.println("User id = " + customer.getId());
+		if (!customer.getEmail().equals(customerDto.getEmail()) && customerDto.getEmail() != null
+				&& !customerDto.getEmail().trim().isEmpty()) {
+			throw new InvalidVehicleTypeException("Email can not be updated.");
+		}
+
+//		System.out.println("User id = " + customer.getId());
 
 		customerDao.save(customer);
-		System.out.println("2 = User id = " + customer.getId());
+//		System.out.println("2 = User id = " + customer.getId());
 
 		return new CustomeResponse<>(CustomerToDto(customer), HttpStatus.OK.value(), "Data updated.");
 	}
-	
 
 	@Override
 	public CustomeResponse<?> showAllVehicles(String email) {
@@ -76,23 +90,21 @@ public class CustomerServiceImpl implements CustomerService {
 		if (customer == null) {
 			return new CustomeResponse<>(null, HttpStatus.BAD_REQUEST.value(), "Email not found.");
 		}
-		
-		List<Vehicle> vehicleList =vehicleDao.findByCustomer(customer);
-		
+
+		List<Vehicle> vehicleList = vehicleDao.findByCustomer(customer);
+
 		if (vehicleList.isEmpty()) {
-			return new CustomeResponse<>(CustomerToDto(customer), HttpStatus.BAD_REQUEST.value(), "No vehicle found for the customer.");
+			return new CustomeResponse<>(CustomerToDto(customer), HttpStatus.BAD_REQUEST.value(),
+					"No vehicle found for the customer.");
 		}
-		
-		List<VehicleDto> vehicleDtos = vehicleList.stream().map(vehicle -> VehicleServiceImpl.vehicleToDto(vehicle)).collect(Collectors.toList());
-		
+
+		List<VehicleDto> vehicleDtos = vehicleList.stream().map(vehicle -> VehicleServiceImpl.vehicleToDto(vehicle))
+				.collect(Collectors.toList());
+
 		CustomerDto customerDto = CustomerToDto(customer, vehicleDtos);
-		
+
 		return new CustomeResponse<>(customerDto, HttpStatus.OK.value(), "User found with vehicle");
 	}
-
-	
-	
-	
 
 	public static Customer dtoToCustomer(CustomerDto customerDto) {
 		Customer customer = new Customer(customerDto.getName(), customerDto.getEmail(), customerDto.getPhoneNo(),
@@ -107,22 +119,22 @@ public class CustomerServiceImpl implements CustomerService {
 
 		return customerDto;
 	}
-	
-	private  CustomerDto CustomerToDto(Customer customer, List<VehicleDto> vehicles) {
-		
+
+	private CustomerDto CustomerToDto(Customer customer, List<VehicleDto> vehicles) {
+
 		CustomerDto customerDto = new CustomerDto();
-		
-		if(customer!=null) {
+
+		if (customer != null) {
 			customerDto.setId(customer.getId());
 			customerDto.setName(customer.getName());
 			customerDto.setEmail(customer.getEmail());
 			customerDto.setAddress(customer.getAddress());
 			customerDto.setPhoneNo(customer.getPhoneNo());
 			customerDto.setVehicles(vehicles);
-			
+
 			return customerDto;
 		}
-		
+
 		return null;
 	}
 

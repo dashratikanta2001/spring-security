@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Example;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -99,6 +100,21 @@ public class ShowroomDaoImpl implements ShowroomDao {
 		
 		Showroom showroom = sessionFactory.getCurrentSession().get(Showroom.class, id);
 		return showroom;
+	}
+
+	@Override
+	public Boolean doesShowroomExist(Showroom showroom) {
+		// TODO Auto-generated method stub
+		
+		
+//		criteria.add(Restrictions.)
+		
+		Example example = Example.create(showroom).excludeProperty("id");
+		
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Showroom.class).add(example);
+		
+		
+		return criteria.list().size()>0;
 	}
 	
 	

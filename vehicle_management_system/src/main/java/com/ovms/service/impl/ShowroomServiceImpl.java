@@ -16,6 +16,7 @@ import com.ovms.enums.VehicleType;
 import com.ovms.exception.InvalidVehicleTypeException;
 import com.ovms.response.CustomeResponse;
 import com.ovms.service.ShowroomService;
+import com.ovms.util.RegexPattern;
 
 @Service
 public class ShowroomServiceImpl implements ShowroomService {
@@ -29,6 +30,12 @@ public class ShowroomServiceImpl implements ShowroomService {
 	@Override
 	public CustomeResponse<?> save(ShowroomDto showroomDto) {
 		// TODO Auto-generated method stub
+		if (!RegexPattern.validEmailPattern(showroomDto.getEmail())) {
+			throw new InvalidVehicleTypeException("Please provide a valid email id.");
+		}
+
+		RegexPattern.validPhoneNumberPattern(showroomDto.getPhoneNo());
+
 		if (showroomDto.getVehicleType() != null && showroomDto.getVehicleBrand() != null) {
 			VehicleType valueOfVehicleType;
 			try {
@@ -40,7 +47,7 @@ public class ShowroomServiceImpl implements ShowroomService {
 			Brands brands = new Brands();
 			try {
 				String vehicleBrand = showroomDto.getVehicleBrand();
-				brands= brandsDao.find(vehicleBrand, valueOfVehicleType);
+				brands = brandsDao.find(vehicleBrand, valueOfVehicleType);
 			} catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
@@ -52,14 +59,19 @@ public class ShowroomServiceImpl implements ShowroomService {
 //			showroom.setVehicleType(brands.getVehicleType());
 			Showroom dtoToShowroom = dtoToShowroom(showroomDto);
 			dtoToShowroom.setBrand(brands);
-			
-			Showroom showroom = showroomDao.save(dtoToShowroom);
-			if (showroom!=null) {
-				return new CustomeResponse<>(ShowroomToDto(showroom), HttpStatus.OK.value(), "Showroom added.");				
+//			showroomDao.
+
+			if (showroomDao.doesShowroomExist(dtoToShowroom)) {
+				return new CustomeResponse<>(null, HttpStatus.BAD_REQUEST.value(), "Showroom already registered.");
 			}
-			
+
+			Showroom showroom = showroomDao.save(dtoToShowroom);
+			if (showroom != null) {
+				return new CustomeResponse<>(ShowroomToDto(showroom), HttpStatus.OK.value(), "Showroom added.");
+			}
+
 		}
-		
+
 		return new CustomeResponse<>(null, HttpStatus.BAD_REQUEST.value(), "showroom not added.");
 	}
 
@@ -77,56 +89,54 @@ public class ShowroomServiceImpl implements ShowroomService {
 	@Override
 	public CustomeResponse<?> findByVehicleType(String type) {
 		// TODO Auto-generated method stub
-		
+
 		try {
 			VehicleType valueOfVehicleType = VehicleType.valueOf(VehicleType.class, type.toUpperCase());
 			List<Showroom> showroomList = showroomDao.findByType(valueOfVehicleType);
-			
+
 			if (showroomList.isEmpty()) {
 				return new CustomeResponse<>(null, HttpStatus.BAD_REQUEST.value(), "No showroom found.");
 			}
-			
-			List<ShowroomDto> showRoomDtos = showroomList.stream().map(list -> ShowroomToDto(list)).collect(Collectors.toList());
+
+			List<ShowroomDto> showRoomDtos = showroomList.stream().map(list -> ShowroomToDto(list))
+					.collect(Collectors.toList());
 			return new CustomeResponse<>(showRoomDtos, HttpStatus.OK.value(), "Show room found");
 		} catch (Exception e) {
 			throw new InvalidVehicleTypeException("Invalid Vehicle Type.");
 		}
-		
+
 	}
 
-	
 	@Override
 	public CustomeResponse<?> findByVehicleBrand(String brand) {
 		// TODO Auto-generated method stub
-		
-		Brands brands= brandsDao.findBrandName(brand);
-		
+
+		Brands brands = brandsDao.findBrandName(brand);
+
 		if (brands == null) {
 			throw new InvalidVehicleTypeException("Invalid brand name");
 		}
-		
+
 		List<Showroom> byBrand = showroomDao.findByBrand(brands.getName());
-		
-		List<ShowroomDto> showroomDtos = byBrand.stream().map(showroomBrand -> ShowroomToDto(showroomBrand)).collect(Collectors.toList());
-		
-				
+
+		List<ShowroomDto> showroomDtos = byBrand.stream().map(showroomBrand -> ShowroomToDto(showroomBrand))
+				.collect(Collectors.toList());
+
 		return new CustomeResponse<>(showroomDtos, HttpStatus.OK.value(), "Showroom found");
 	}
-
 
 	@Override
 	public CustomeResponse<?> findByCity(String city) {
 		// TODO Auto-generated method stub
-		
+
 		List<Showroom> showroomList = showroomDao.findByCity(city);
-		
-		List<ShowroomDto> showroomDtos = showroomList.stream().map(showroom -> ShowroomToDto(showroom)).collect(Collectors.toList());
-		
+
+		List<ShowroomDto> showroomDtos = showroomList.stream().map(showroom -> ShowroomToDto(showroom))
+				.collect(Collectors.toList());
+
 		return new CustomeResponse<>(showroomDtos, HttpStatus.OK.value(), "Showroom found");
 	}
 
-	
-	
 	public static Showroom dtoToShowroom(ShowroomDto showroomDto) {
 		// TODO Auto-generated method stub
 		Showroom showroom = new Showroom();
@@ -136,7 +146,7 @@ public class ShowroomServiceImpl implements ShowroomService {
 		showroom.setPhoneNo(showroomDto.getPhoneNo());
 		showroom.setEmail(showroomDto.getEmail());
 //		showroom.setBrand(showroomDto.get);
-		
+
 //		if (showroomDto.getVehicleType() != null && showroomDto.getVehicleBrand() != null) {
 //			VehicleType valueOfVehicleType;
 //			try {
@@ -174,10 +184,9 @@ public class ShowroomServiceImpl implements ShowroomService {
 		showroomDto.setEmail(showroom.getEmail());
 		showroomDto.setVehicleBrand(showroom.getBrand().getName());
 //		showroomDto.setVehicleType(showroom.getVehicleType().name());
-		try
-		{
-		showroomDto.setVehicleType(showroom.getBrand().getVehicleType().name());
-		}catch (Exception e) {
+		try {
+			showroomDto.setVehicleType(showroom.getBrand().getVehicleType().name());
+		} catch (Exception e) {
 			// TODO: handle exception
 		}
 

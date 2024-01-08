@@ -91,7 +91,7 @@
 			<version>5.3.3.RELEASE</version>
 		</dependency>
 
-		
+
 		<!--https://mvnrepository.com/artifact/org.springframework.security/spring-security-web -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -99,6 +99,20 @@
 			<version>5.3.3.RELEASE</version>
 		</dependency>
 
+		<!--Swager configuration-->
+		<!--
+		https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.9.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.9.2</version> <!-- Use the latest version -->
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->
 		<dependency>

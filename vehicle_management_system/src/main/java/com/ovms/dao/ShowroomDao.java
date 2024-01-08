@@ -10,6 +10,8 @@ public interface ShowroomDao {
 	Showroom save(Showroom showroom);
 	
 	Showroom findById(Integer id);
+	
+	Boolean doesShowroomExist(Showroom showroom);
 
 	List<Showroom> findAll();
 

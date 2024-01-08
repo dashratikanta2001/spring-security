@@ -17,6 +17,8 @@ import com.ovms.dto.CustomerDto;
 import com.ovms.response.CustomeResponse;
 import com.ovms.response.ErrorResponse;
 import com.ovms.service.CustomerService;
+import com.ovms.util.RegexPattern;
+
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
@@ -28,6 +30,7 @@ public class CustomerController {
 
 	@PostMapping
 	public ResponseEntity<?> saveCustomer(@Valid @RequestBody CustomerDto customerDto) {
+		
 		CustomeResponse<?> response = customerService.save(customerDto);
 
 		if (response.getStatus() == HttpStatus.OK.value()) {
@@ -35,12 +38,14 @@ public class CustomerController {
 		}
 
 //		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()),
+				HttpStatus.BAD_REQUEST);
 
 	}
 
 	@PutMapping("/{email}")
 	public ResponseEntity<?> updateCustomer(@RequestBody CustomerDto customerDto, @PathVariable String email) {
+		RegexPattern.validEmailPattern(email);
 		CustomeResponse<?> response = customerService.update(email, customerDto);
 
 		if (response.getStatus() == HttpStatus.OK.value()) {
@@ -48,12 +53,14 @@ public class CustomerController {
 		}
 
 //		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()),
+				HttpStatus.BAD_REQUEST);
 
 	}
 
 	@GetMapping("/{email}")
 	public ResponseEntity<?> CustomerByEmail(@PathVariable String email) {
+		RegexPattern.validEmailPattern(email);
 		CustomeResponse<?> response = customerService.findByEmail(email);
 
 		if (response.getStatus() == HttpStatus.OK.value()) {
@@ -61,12 +68,15 @@ public class CustomerController {
 		}
 
 //		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()),
+				HttpStatus.BAD_REQUEST);
 
 	}
 
 	@GetMapping("/allvehicle/{email}")
 	public ResponseEntity<?> getMethodName(@PathVariable String email) {
+
+		RegexPattern.validEmailPattern(email);
 
 		CustomeResponse<?> response = customerService.showAllVehicles(email);
 
@@ -75,7 +85,8 @@ public class CustomerController {
 		}
 
 //		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()),
+				HttpStatus.BAD_REQUEST);
 	}
 
 }

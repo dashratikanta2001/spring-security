@@ -57,12 +57,16 @@ public class GlobalException {
 	}
 	
 	
-	@ExceptionHandler(UnauthorizeException.class)
-	public ResponseEntity<?> handleUnauthorizeException(UnauthorizeException ex) {
+	@ExceptionHandler(CustomUnauthorizeException.class)
+	public ResponseEntity<?> handleUnauthorizeException(CustomUnauthorizeException ex) {
 		
 		return new ResponseEntity<>(new ErrorResponse<>(HttpStatus.UNAUTHORIZED.value(), ex.getMessage()), HttpStatus.UNAUTHORIZED);
 		
 	}
 	
-	
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<?> handleGlobalException(Exception ex)
+	{
+		return new ResponseEntity<>(new ErrorResponse<>(HttpStatus.BAD_REQUEST.value(), ex.getMessage()), HttpStatus.BAD_REQUEST);
+	}	
 }

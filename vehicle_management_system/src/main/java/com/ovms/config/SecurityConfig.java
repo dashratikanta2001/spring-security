@@ -2,6 +2,7 @@ package com.ovms.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -38,9 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		.disable()
 		.cors().disable()
 		.authorizeRequests()
+//		 .antMatchers("/swagger-ui.html/**", "/v3/api-docs", "/token","/webjars/**","/swagger-resources/**","/v2/api-docs").permitAll()
 		.antMatchers("/**").permitAll()
-		.antMatchers("/api/showroom/").permitAll()
-		.antMatchers("/v3/api-docs").permitAll()
 		.anyRequest()
 		.authenticated()
 		.and()

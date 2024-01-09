@@ -1,5 +1,9 @@
 package com.ovms.controller;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -42,35 +46,17 @@ public class HomeController {
 	@Autowired
 	private Environment env;
 
-	@GetMapping("/home")
-	public ResponseEntity<?> test() {
-		return new ResponseEntity<>("Welcome", HttpStatus.OK);
-	}
-
 	@GetMapping
 	public ResponseEntity<?> doAuthorizationSetup() {
-		if (roleService.findRole(RoleType.ROLE_SUPERADMIN) == null) {
-			roleService.addnewRole(RoleType.ROLE_SUPERADMIN);
-			roleService.addnewRole(RoleType.ROLE_ADMIN);
-			roleService.addnewRole(RoleType.ROLE_MANAGER);
-			roleService.addnewRole(RoleType.ROLE_RECEPTIONIST);
-			roleService.addnewRole(RoleType.ROLE_USER);
-
-			Customer superAdmin = new Customer();
-
-			superAdmin.setEmail(env.getRequiredProperty("superAdmin.username"));
-			superAdmin.setName(env.getRequiredProperty("superAdmin.name"));
-			superAdmin.setRole(roleService.findRole(RoleType.ROLE_SUPERADMIN));
-
-			superAdmin = customerDao.save(superAdmin);
-			
-			
-			CridentialMaster cridentialMaster = new CridentialMaster(superAdmin.getEmail(), passwordEncoder.encode(env.getRequiredProperty("superAdmin.password")), superAdmin);
-			cridentialMasterDao.addCridential(cridentialMaster);
-
-			return new ResponseEntity<>("Setup completed.", HttpStatus.OK);
-		}
-
-		return new ResponseEntity<>("Welcome", HttpStatus.OK);
+		
+		HashMap<String,String> map = new LinkedHashMap<>();
+		
+		map.put("Name", "Vehicle Management System");
+		map.put("swagger-ui - enabled", "true");
+		map.put("swagger-ui - url", "/swagger-ui.html");
+		map.put("TimeStamp", new Date().toLocaleString());
+		map.put("status", "200");
+		
+		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
 }

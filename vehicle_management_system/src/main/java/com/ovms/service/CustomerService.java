@@ -12,4 +12,6 @@ public interface CustomerService {
 	CustomeResponse<?> findByEmail(String email);
 
 	CustomeResponse<?> showAllVehicles(String email);
+
+	CustomeResponse<?> assignRole(Integer customerId, Integer roleId);
 }

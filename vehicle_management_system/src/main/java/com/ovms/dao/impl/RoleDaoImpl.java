@@ -38,4 +38,12 @@ public class RoleDaoImpl implements RoleDao {
 		
 	}
 
+	@Override
+	public Role findRoleById(Integer roleId) {
+		// TODO Auto-generated method stub
+		
+		Role role = sessionFactory.getCurrentSession().get(Role.class, roleId);
+		return role;
+	}
+
 }

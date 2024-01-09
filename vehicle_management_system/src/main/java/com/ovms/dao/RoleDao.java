@@ -8,4 +8,6 @@ public interface RoleDao {
 	Role findRole(RoleType role);
 	
 	void addRole(Role role);
+
+	Role findRoleById(Integer roleId);
 }

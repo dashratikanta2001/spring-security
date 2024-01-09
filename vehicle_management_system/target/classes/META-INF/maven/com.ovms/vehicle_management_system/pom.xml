@@ -128,11 +128,7 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.practice</groupId>
-			<artifactId>springSecurityPractice</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
+		
 	</dependencies>
 	<build>
 		<finalName>vehicle_management_system</finalName>

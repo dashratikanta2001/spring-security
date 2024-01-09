@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +55,7 @@ public class CustomerServiceImpl implements CustomerService {
 			RegexPattern.validPhoneNumberPattern(customerDto.getPhoneNo());
 			Customer customer = dtoToCustomer(customerDto);
 			
-			Role role = roleDao.findRole(RoleType.ROLE_ADMIN);
+			Role role = roleDao.findRole(RoleType.ROLE_USER);
 			customer.setRole(role);
 			Customer savedcustomer = customerDao.save(customer);
 			
@@ -130,6 +131,44 @@ public class CustomerServiceImpl implements CustomerService {
 
 		return new CustomeResponse<>(customerDto, HttpStatus.OK.value(), "User found with vehicle");
 	}
+	
+	
+	@Override
+	public CustomeResponse<?> assignRole(Integer customerId, Integer roleId) {
+		// TODO Auto-generated method stub
+		Customer customer = customerDao.findById(customerId);
+		if (customer ==null) {
+			throw new UsernameNotFoundException("Invalid User id");
+		}
+		
+		Role role =roleDao.findRoleById(roleId);
+		if (role == null) {
+			throw new UsernameNotFoundException("Invalid role id");
+		}
+		
+		if (customer.getRole().getRole().equals(RoleType.ROLE_SUPERADMIN.toString()) || role.getRole().equals(RoleType.ROLE_SUPERADMIN.toString())) {
+			return new CustomeResponse<>(null, HttpStatus.UNAUTHORIZED.value(), "Unauthorized to add SUPERADMIN");
+		}
+		
+		customer.setRole(role);
+		Customer save = customerDao.save(customer);
+		if (save !=null) {
+			return new CustomeResponse<>(null, HttpStatus.OK.value(), "Role changed successfully");
+		}
+		
+		return new CustomeResponse<>(null, HttpStatus.BAD_REQUEST.value(), "Role not changed");
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+												/* DTO CONVERSION */
+	
 
 	public static Customer dtoToCustomer(CustomerDto customerDto) {
 		Customer customer = new Customer(customerDto.getName(), customerDto.getEmail(), customerDto.getPhoneNo(),
@@ -163,4 +202,5 @@ public class CustomerServiceImpl implements CustomerService {
 		return null;
 	}
 
+	
 }

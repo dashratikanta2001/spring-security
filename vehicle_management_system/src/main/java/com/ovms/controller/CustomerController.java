@@ -33,8 +33,6 @@ public class CustomerController {
 	@Autowired
 	private Authorization authorization;
 
-//	private final String tokenHeader = SecurityConstants.HEADER.getHeader();
-
 	@PostMapping
 	public ResponseEntity<?> saveCustomer(@Valid @RequestBody CustomerDto customerDto, HttpServletRequest request,
 			HttpServletResponse servletResponse) {
@@ -45,13 +43,41 @@ public class CustomerController {
 					HttpStatus.UNAUTHORIZED);
 		}
 
-		CustomeResponse<?> authorizeToAddCustomer = authorization.authorizeToAddCustomer(header.substring(7));
-		
-		System.out.println("Authorized = "+authorizeToAddCustomer.getStatus());
-		
+		CustomeResponse<?> authorizeToAddCustomer = authorization.authorizeToAddOrUpdateCustomer(header.substring(7));
+
+
 		if (authorizeToAddCustomer.getStatus() == HttpStatus.OK.value()) {
 
 			CustomeResponse<?> response = customerService.save(customerDto);
+
+			if (response.getStatus() == HttpStatus.OK.value()) {
+				return new ResponseEntity<>(response, HttpStatus.OK);
+			}
+
+			return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()),
+					HttpStatus.BAD_REQUEST);
+		}
+
+		return ResponseEntity.badRequest().body(authorizeToAddCustomer);
+
+
+	}
+
+	@PutMapping("/{email}")
+	public ResponseEntity<?> updateCustomer(@RequestBody CustomerDto customerDto, @PathVariable String email,
+			HttpServletRequest request, HttpServletResponse servletResponse) {
+		RegexPattern.validEmailPattern(email);
+		String header = request.getHeader(SecurityConstants.HEADER.getHeader());
+		if (header == null) {
+			return new ResponseEntity<>(new ErrorResponse<>(HttpStatus.UNAUTHORIZED.value(), "Unauthorized."),
+					HttpStatus.UNAUTHORIZED);
+		}
+
+		CustomeResponse<?> authorizeToAddCustomer = authorization.authorizeToAddOrUpdateCustomer(header.substring(7));
+
+		if (authorizeToAddCustomer.getStatus() == HttpStatus.OK.value()) {
+
+			CustomeResponse<?> response = customerService.update(email, customerDto);
 
 			if (response.getStatus() == HttpStatus.OK.value()) {
 				return new ResponseEntity<>(response, HttpStatus.OK);
@@ -61,57 +87,95 @@ public class CustomerController {
 			return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()),
 					HttpStatus.BAD_REQUEST);
 		}
-		
-		return ResponseEntity.badRequest().body(authorizeToAddCustomer); 
-
-//		return new ResponseEntity<>("Header = " + header, HttpStatus.OK);
-
-	}
-
-	@PutMapping("/{email}")
-	public ResponseEntity<?> updateCustomer(@RequestBody CustomerDto customerDto, @PathVariable String email) {
-		RegexPattern.validEmailPattern(email);
-		CustomeResponse<?> response = customerService.update(email, customerDto);
-
-		if (response.getStatus() == HttpStatus.OK.value()) {
-			return new ResponseEntity<>(response, HttpStatus.OK);
-		}
-
-//		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()),
-				HttpStatus.BAD_REQUEST);
+		return ResponseEntity.badRequest().body(authorizeToAddCustomer);
 
 	}
 
 	@GetMapping("/{email}")
-	public ResponseEntity<?> CustomerByEmail(@PathVariable String email) {
+	public ResponseEntity<?> CustomerByEmail(@PathVariable String email, HttpServletRequest request,
+			HttpServletResponse servletResponse) {
 		RegexPattern.validEmailPattern(email);
-		CustomeResponse<?> response = customerService.findByEmail(email);
-
-		if (response.getStatus() == HttpStatus.OK.value()) {
-			return new ResponseEntity<>(response, HttpStatus.OK);
+		String header = request.getHeader(SecurityConstants.HEADER.getHeader());
+		if (header == null) {
+			return new ResponseEntity<>(new ErrorResponse<>(HttpStatus.UNAUTHORIZED.value(), "Unauthorized."),
+					HttpStatus.UNAUTHORIZED);
 		}
 
-//		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()),
-				HttpStatus.BAD_REQUEST);
+		CustomeResponse<?> authorizeToAddCustomer = authorization.authorizeToViewDetails(header.substring(7));
 
+		System.out.println("Authorized = " + authorizeToAddCustomer.getStatus());
+
+		if (authorizeToAddCustomer.getStatus() == HttpStatus.OK.value()) {
+			CustomeResponse<?> response = customerService.findByEmail(email);
+
+			if (response.getStatus() == HttpStatus.OK.value()) {
+				return new ResponseEntity<>(response, HttpStatus.OK);
+			}
+
+//		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()),
+					HttpStatus.BAD_REQUEST);
+
+		}
+		return ResponseEntity.badRequest().body(authorizeToAddCustomer);
 	}
 
 	@GetMapping("/allvehicle/{email}")
-	public ResponseEntity<?> getMethodName(@PathVariable String email) {
+	public ResponseEntity<?> getMethodName(@PathVariable String email, HttpServletRequest request,
+			HttpServletResponse servletResponse) {
 
 		RegexPattern.validEmailPattern(email);
-
-		CustomeResponse<?> response = customerService.showAllVehicles(email);
-
-		if (response.getStatus() == HttpStatus.OK.value()) {
-			return new ResponseEntity<>(response, HttpStatus.OK);
+		String header = request.getHeader(SecurityConstants.HEADER.getHeader());
+		if (header == null) {
+			return new ResponseEntity<>(new ErrorResponse<>(HttpStatus.UNAUTHORIZED.value(), "Unauthorized."),
+					HttpStatus.UNAUTHORIZED);
 		}
 
+		CustomeResponse<?> authorizeToAddCustomer = authorization.authorizeToViewDetails(header.substring(7));
+
+		System.out.println("Authorized = " + authorizeToAddCustomer.getStatus());
+
+		if (authorizeToAddCustomer.getStatus() == HttpStatus.OK.value()) {
+			CustomeResponse<?> response = customerService.showAllVehicles(email);
+
+			if (response.getStatus() == HttpStatus.OK.value()) {
+				return new ResponseEntity<>(response, HttpStatus.OK);
+			}
+
 //		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-		return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()),
-				HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()),
+					HttpStatus.BAD_REQUEST);
+		}
+		return ResponseEntity.badRequest().body(authorizeToAddCustomer);
+	}
+
+	@PostMapping("/{customerId}/assignrole/{roleId}")
+	public ResponseEntity<?> assignRole(@PathVariable Integer customerId, @PathVariable Integer roleId,
+			HttpServletRequest request, HttpServletResponse servletResponse) {
+		// TODO: process POST request
+
+		String header = request.getHeader(SecurityConstants.HEADER.getHeader());
+		if (header == null) {
+			return new ResponseEntity<>(new ErrorResponse<>(HttpStatus.UNAUTHORIZED.value(), "Unauthorized."),
+					HttpStatus.UNAUTHORIZED);
+		}
+		CustomeResponse<?> authorizeToAddRole = authorization.authorizeToAddRole(header.substring(7), customerId,
+				roleId);
+
+		if (authorizeToAddRole.getStatus() == HttpStatus.OK.value()) {
+			CustomeResponse<?> response = customerService.assignRole(customerId, roleId);
+
+			if (response.getStatus() == HttpStatus.OK.value()) {
+
+				return new ResponseEntity<>(response, HttpStatus.OK);
+			}
+
+			return new ResponseEntity<>(new ErrorResponse<>(response.getStatus(), response.getMessage()),
+					HttpStatus.BAD_REQUEST);
+		}
+
+		return new ResponseEntity<>(authorizeToAddRole, HttpStatus.UNAUTHORIZED);
+
 	}
 
 }

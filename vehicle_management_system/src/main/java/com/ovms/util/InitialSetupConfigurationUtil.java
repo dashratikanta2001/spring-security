@@ -39,7 +39,7 @@ public class InitialSetupConfigurationUtil implements ApplicationListener<Applic
 	@Override
 	public void onApplicationEvent(ApplicationEvent event) {
 		// TODO Auto-generated method stub
-		if (!isExecuted) {
+		if (!isExecuted) { 
 			if (roleService.findRole(RoleType.ROLE_SUPERADMIN) == null) {
 				roleService.addnewRole(RoleType.ROLE_SUPERADMIN);
 				roleService.addnewRole(RoleType.ROLE_ADMIN);

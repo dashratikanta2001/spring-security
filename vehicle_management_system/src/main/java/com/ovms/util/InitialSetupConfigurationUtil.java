@@ -34,7 +34,7 @@ public class InitialSetupConfigurationUtil implements ApplicationListener<Applic
 	@Autowired
 	private Environment env;
 	
-	private boolean isExecuted = false;
+	private static boolean isExecuted;
 
 	@Override
 	public void onApplicationEvent(ApplicationEvent event) {

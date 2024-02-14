@@ -9,10 +9,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import com.ovms.service.impl.CustomUserDetailsService;
 
@@ -24,6 +26,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
 	private JwtAuthenticationFilter jwtAuthenticationFilter;
+	
+	@Autowired
+	private LogoutHandler logoutHandler;
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -48,6 +53,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		
 		http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+		
+		http.logout()
+			.logoutUrl("/api/auth/logout")
+			.addLogoutHandler(logoutHandler)
+			.logoutSuccessHandler(
+					(request, response, authentication) ->
+					SecurityContextHolder.clearContext()
+					);
 		
 	}
 

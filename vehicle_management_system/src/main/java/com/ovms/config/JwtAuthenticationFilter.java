@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ovms.dao.TokenDao;
 import com.ovms.response.CustomeResponse;
 import com.ovms.response.ErrorResponse;
 import com.ovms.service.impl.CustomUserDetailsService;
@@ -37,6 +38,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	@Autowired
 	private Jackson2ObjectMapperBuilder objectMapperBuilder;
+	
+	@Autowired
+	private TokenDao tokenDao;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -53,6 +57,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 			try {
 				username = jwtUtil.getUsernameFromToken(jwtToken);
+				if(!tokenDao.tokenAvailable(username, jwtToken))
+				{
+					ErrorResponse<?> errorResponse = new ErrorResponse<>(HttpStatus.UNAUTHORIZED.value(), "Token Expired");
+					sendJsonResponse(response, errorResponse, HttpStatus.UNAUTHORIZED);
+					return;
+				}
 			} catch (ExpiredJwtException e) {
 				// TODO: handle exception
 				ErrorResponse<?> errorResponse = new ErrorResponse<>(HttpStatus.UNAUTHORIZED.value(), "Token Expired");

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ovms.dao.TokenDao;
+import com.ovms.entity.Token;
 import com.ovms.response.JwtRequest;
 import com.ovms.response.JwtResponse;
 import com.ovms.service.impl.CustomUserDetailsService;
@@ -30,6 +32,9 @@ public class JwtController {
 
 	@Autowired
 	private JwtUtil jwtUtil;
+	
+	@Autowired
+	private TokenDao tokenDao;
 
 	@PostMapping("/token")
 	public ResponseEntity<?> generateToken(@RequestBody JwtRequest jwtRequest) {
@@ -51,8 +56,20 @@ public class JwtController {
 		}
 
 		UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(jwtRequest.getUsername());
+		
+		Token tokenByusername = tokenDao.getTokenByusername(userDetails.getUsername());
 
 		String token = jwtUtil.generateToken(userDetails);
+		System.out.println("Inside jwt controller : "+tokenByusername);
+		
+		if (tokenByusername == null) {
+			tokenByusername = new Token();
+			tokenDao.addToken(userDetails.getUsername(), token);
+		}
+		else {
+			tokenDao.addToken(tokenByusername.getUsername(), token);
+		}
+		
 
 		return ResponseEntity.ok(new JwtResponse(token));
 	}
